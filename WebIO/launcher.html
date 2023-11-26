@@ -1,0 +1,309 @@
+<div></div>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style>
+    *{
+        user-select: none;
+    }
+    #view{
+        width: 1280;
+        height: 712;
+    }
+    .banner_img{
+        width: 459px;
+        position: fixed;
+        top: 250;
+    }
+    #infos{
+        position: fixed;
+        top: 500;
+        background-color: rgba(0, 0, 0, 0.5);;
+        color: white;
+        width: 459px;
+    }
+    .ckw{
+        margin: 10px;
+
+    }
+    .ckw:hover{
+        color: bisque;
+        border-bottom-style: solid;
+        border-bottom-color: bisque;
+    }
+    .ckd{
+        margin: 10px;
+        color: bisque;
+        border-bottom-style: solid;
+        border-bottom-color: bisque;
+    }
+    a:hover{
+        color: bisque;
+    }
+    a{
+        opacity: 1;
+        color: white;
+        text-decoration: none;
+        padding-top: 5px;
+    }
+    #select_bar_a{
+        background-color: rgba(0, 0, 0, 0.2);
+        font-size: 20px;
+        height: 30px;
+        padding-top: 5px;
+    }
+    #open{
+        position: fixed;
+        background-color: rgb(254 200 9);
+        width: 239px;
+        height: 55px;
+        border: 0px;
+        border-radius: 5px;
+        font-size: 28px;
+        text-align: center;
+        padding-top: 15px;
+    }
+    #lf{
+        height: 212px;
+        top: 250px;
+        position: fixed;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index:114514;
+        width: 20px;
+        color: white;
+    }
+    #rt{
+        height: 212px;
+        top: 250px;
+        left: 447px;
+        position: fixed;
+        z-index:114514;
+        background-color: rgba(0, 0, 0, 0.5);
+        width: 20px;
+        color: white;
+
+    }
+    video{
+position:fixed;
+top:0;
+left:0;
+z-index:-1;
+width:100%;
+height:100%;
+}
+</style>
+<script>
+    
+function getQueryString(name) {
+    var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) {
+        return unescape(r[2]);
+    }
+    return null;
+}
+    var api = "/"+getQueryString("api")+"_launcher_ol.json";
+    var obj,obja;
+    var xhr = new XMLHttpRequest();
+        xhr.open('get',api);
+        xhr.send();
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState==4 && xhr.status==200){
+                obj = JSON.parse(xhr.responseText);
+                //console.log(obj)
+                    
+            }
+        }
+        var xhra = new XMLHttpRequest();
+        xhra.open('get',"/"+getQueryString("api")+"_launcher_config.json");
+        xhra.send();
+        xhra.onreadystatechange = function(){
+            if(xhra.readyState==4 && xhra.status==200){
+                obja = JSON.parse(xhra.responseText);
+                //console.log(obj)
+                    
+            }
+        }
+    function Init(){
+        var xhra = new XMLHttpRequest();
+        xhra.open('get',"/"+getQueryString("api")+"_launcher_config.json");
+        xhra.send();
+        xhra.onreadystatechange = function(){
+            if(xhra.readyState==4 && xhra.status==200){
+                obja = JSON.parse(xhra.responseText);
+                //console.log(obj)
+                    
+            }
+        }
+        var xhr = new XMLHttpRequest();
+        xhr.open('get',api);
+        xhr.send();
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState==4 && xhr.status==200){
+                obj = JSON.parse(xhr.responseText);
+                //console.log(obj)
+                    
+            }
+        }
+        if("data" in obj == false){
+            window.location.href = window.location.href;
+            return;
+        }
+        //背景图片
+        document.body.style.backgroundImage = "url("+obj.data.adv.background+")";
+        //banner栏
+        var banner_obj = document.getElementById("banner");
+        for (var key in obj.data.banner){
+            banner_obj.innerHTML = banner_obj.innerHTML + '<a href="javascript: sdk_openURL(\''+obj.data.banner[key].url+'\')"><img class="banner_img" src="'+obj.data.banner[key].img+'"></a>'
+        }
+        //POST_TYPE_INFO 资讯
+        var aPOST_TYPE_INFO = document.getElementById("POST_TYPE_INFO");
+        //POST_TYPE_ACTIVITY 活动
+        var aPOST_TYPE_ACTIVITY = document.getElementById("POST_TYPE_ACTIVITY");
+        //POST_TYPE_ANNOUNCE 公告
+        var aPOST_TYPE_ANNOUNCE = document.getElementById("POST_TYPE_ANNOUNCE");
+        aPLUGIN = document.getElementById("PLUGIN");
+        for (var key in obj.data.post){
+            if(obj.data.post[key].type == "POST_TYPE_INFO"){
+                aPOST_TYPE_INFO.innerHTML = aPOST_TYPE_INFO.innerHTML + '<a href="javascript: sdk_openURL(\''+obj.data.post[key].url+'\')" title="'+obj.data.post[key].tittle+'">'+obj.data.post[key].title+'</a><br>'
+            }
+            if(obj.data.post[key].type == "POST_TYPE_ACTIVITY"){
+                aPOST_TYPE_ACTIVITY.innerHTML = aPOST_TYPE_ACTIVITY.innerHTML + '<a href="javascript: sdk_openURL(\''+obj.data.post[key].url+'\')" title="'+obj.data.post[key].tittle+'">'+obj.data.post[key].title+'</a><br>'
+            }
+            if(obj.data.post[key].type == "POST_TYPE_ANNOUNCE"){
+                aPOST_TYPE_ANNOUNCE.innerHTML = aPOST_TYPE_ANNOUNCE.innerHTML + '<a href="javascript: sdk_openURL(\''+obj.data.post[key].url+'\')" title="'+obj.data.post[key].tittle+'">'+obj.data.post[key].title+'</a><br>'
+            }
+        }
+        //修改显示
+        hdw(1);
+        ow(0);
+        //校验是否成功,不成功重新获取
+        if (banner_obj.innerHTML != "" && aPOST_TYPE_ANNOUNCE.innerHTML != ""){
+           document.getElementById("errs").innerHTML = "";
+        }
+        if(obja.video == "y"){
+            document.getElementById("bg_vid").src=obja.bg;
+        }
+        if(obja.bg != "AUTO"){
+            document.body.style.backgroundImage = "url("+obja.bg+")";
+        }
+        
+        key=0;
+    for (var key in obja.tools){
+        aPLUGIN.innerHTML = aPLUGIN.innerHTML + '<a href="javascript: sdk_openURL(\''+obja.tools[key].open_type+'\')" title="'+obja.tools[key].tittle+'">'+obja.tools[key].name+'</a><br>'
+    }
+    if(aPLUGIN.innerHTML==""){
+        aPLUGIN.innerHTML = "<a>无任何插件！请尝试在"+getQueryString("api")+"_launcher_config.json"+"中添加插件</a>"
+    }
+    }
+    function hdw(id){
+        //POST_TYPE_INFO 资讯
+        var aPOST_TYPE_INFO = document.getElementById("POST_TYPE_INFO");
+        //POST_TYPE_ACTIVITY 活动
+        var aPOST_TYPE_ACTIVITY = document.getElementById("POST_TYPE_ACTIVITY");
+        //POST_TYPE_ANNOUNCE 公告
+        var aPOST_TYPE_ANNOUNCE = document.getElementById("POST_TYPE_ANNOUNCE");
+        if (id == 1){
+            aPOST_TYPE_INFO.style.display = "block";
+            aPOST_TYPE_ACTIVITY.style.display = "none";
+            aPOST_TYPE_ANNOUNCE.style.display = "none";
+            aPLUGIN.style.display = "none";
+            document.getElementById("select_bar_a").children[0].className = "ckd";
+            document.getElementById("select_bar_a").children[1].className = "ckw";
+            document.getElementById("select_bar_a").children[2].className = "ckw";
+            document.getElementById("select_bar_a").children[3].className = "ckw";
+        }
+        if (id == 2){
+            aPOST_TYPE_INFO.style.display = "none";
+            aPOST_TYPE_ACTIVITY.style.display = "block";
+            aPOST_TYPE_ANNOUNCE.style.display = "none";
+            aPLUGIN.style.display = "none";
+            document.getElementById("select_bar_a").children[0].className = "ckw";
+            document.getElementById("select_bar_a").children[1].className = "ckd";
+            document.getElementById("select_bar_a").children[2].className = "ckw";
+            document.getElementById("select_bar_a").children[3].className = "ckw";
+        }
+        if (id == 3){
+            aPOST_TYPE_INFO.style.display = "none";
+            aPOST_TYPE_ACTIVITY.style.display = "none";
+            aPOST_TYPE_ANNOUNCE.style.display = "block";
+            aPLUGIN.style.display = "none";
+            document.getElementById("select_bar_a").children[0].className = "ckw";
+            document.getElementById("select_bar_a").children[1].className = "ckw";
+            document.getElementById("select_bar_a").children[2].className = "ckd";
+            document.getElementById("select_bar_a").children[3].className = "ckw";
+        }
+        if (id == 4){
+            aPOST_TYPE_INFO.style.display = "none";
+            aPOST_TYPE_ACTIVITY.style.display = "none";
+            aPOST_TYPE_ANNOUNCE.style.display = "none";
+            aPLUGIN.style.display = "block";
+            document.getElementById("select_bar_a").children[0].className = "ckw";
+            document.getElementById("select_bar_a").children[1].className = "ckw";
+            document.getElementById("select_bar_a").children[2].className = "ckw";
+            document.getElementById("select_bar_a").children[3].className = "ckd";
+        }
+    }
+    window.setInterval(function(){//用于刷新元素位置
+        document.getElementById("open").style.left = window.innerWidth - 270;
+        document.getElementById("open").style.top = window.innerHeight - 100;
+        if(document.getElementById("errs").innerHTML != ""){
+            Init();
+        }
+    },100);
+    window.setInterval(function(){//用于刷新元素位置
+        ow(1)
+    },5000);
+    var idd = 0;
+    function ow(task){
+        var o = document.getElementById("banner").children;
+        idd=idd+task;
+        if (idd >= o.length){idd = 1;}
+        if (idd <= 0){idd = o.length-1;}
+        for (let i = 0; i < o.length; i++) {
+            console.log()
+            if(i==idd){
+                o[i].style.display = "block";
+            }else{
+                o[i].style.display = "none";
+            }
+            
+        }
+    }
+    function sdk_openURL(URL){
+        var api_openweb = "/api/open_url?";
+        document.getElementById("shell").src = api_openweb + URL;
+    }
+    function sdk_openGAME(){
+        var api_opengame = "/api/open_game?" + getQueryString("api");
+        window.location.href = api_opengame;
+        //document.getElementById("shell").src = api_opengame + getQueryString("api");
+    }
+</script>
+<body onload="Init()">
+    <video src="" autoplay loop muted id="bg_vid"></video>
+    <iframe src="" id="shell" style="display: none;"></iframe>
+    <div id="errs">
+        <h1 onclick="Init()" id="rld">抱歉,由于一些原因无法正确加载启动器配置,请检查网络连接或尝试<a style="color: brown;">重载</a>
+        . 错误代码:-1
+        </h1>
+    </div>
+    <div id="lf" onclick="ow(-1)"><</div>
+    <div id="rt" onclick="ow(1)">></div>
+    <div id="banner">
+
+
+    </div>
+    <div id="infos">
+        <div id="select_bar_a">
+            <a class="ckw" onclick="hdw(1)">资讯</a>
+            <a class="ckw" onclick="hdw(2)">活动</a>
+            <a class="ckw" onclick="hdw(3)">公告</a>
+            <a class="ckw" onclick="hdw(4)">*插件*</a>
+        </div>
+        <div id="POST_TYPE_INFO"></div>
+        <div id="POST_TYPE_ACTIVITY"></div>
+        <div id="POST_TYPE_ANNOUNCE"></div>
+        <div id="PLUGIN"></div>
+    </div>
+    <div id="open" onclick="sdk_openGAME()">开始游戏</div><!--原始人,启动!!!!-->
+</body>

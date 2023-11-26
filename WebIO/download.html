@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script>
+    function GetSizeText(size){
+        if (!size) return '';
+        if (size < 1024) return size + ' B';
+        if (size < (1024*1024)) return (size / 1024).toFixed(2) + ' KB';
+        if (size < (1024*1024*1024)) return (size / (1024*1024)).toFixed(2) + ' MB';
+        if (size < (1024*1024*1024*1024)) return (size / (1024*1024*1024)).toFixed(2) + ' GB';
+        return (size / (1024*1024*1024*1024)).toFixed(2) + ' TB';
+    }
+    function getTime(time) {
+            // 转换为式分秒
+        let h = parseInt(time / 60 / 60 % 24)
+        h = h < 10 ? '0' + h : h
+        let m = parseInt(time / 60 % 60)
+        m = m < 10 ? '0' + m : m
+        let s = parseInt(time % 60)
+        s = s < 10 ? '0' + s : s
+        if(h!=0){
+            return h+"时"+m+"分"+s+"秒"
+        }else{
+            if(m!=0){
+                return m+"分"+s+"秒"
+            }else{
+                return s+"秒"
+            }
+        }
+        
+    }
+    function s(id){
+        var xhr = new XMLHttpRequest();
+        xhr.open('get','/dlownload_pace.json?'+id);
+        xhr.send();
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState==4 && xhr.status==200){
+                var obj = JSON.parse(xhr.responseText);
+                if(obj.mode == "download"){
+                    document.getElementById("p"+id).max = obj.all;
+                    document.getElementById("p"+id).value = obj.now;
+                    document.getElementById("t"+id).innerHTML = "正在下载: "+GetSizeText(obj.now)+"/"+GetSizeText(obj.all)+" 剩余时间:"+getTime(obj.time)+" 速度:"+GetSizeText(obj.speed*1024)+"/s";
+                    if(obj.all==obj.now){
+                        document.getElementById("t"+id).innerHTML = "已经完成.";
+                    }
+                }else{
+                    document.getElementById("p"+id).max = obj.all;
+                    document.getElementById("p"+id).value = obj.now;
+                    document.getElementById("t"+id).innerHTML = "正在校验...";
+                }
+                
+            }
+        }
+    }
+    //setTimeout
+    numsx = 0;
+    window.setInterval(function(){
+        var xhr = new XMLHttpRequest();
+        xhr.open('get','/dlownload_tasks.json');
+        xhr.send();
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState==4 && xhr.status==200){
+                var obj = JSON.parse(xhr.responseText);
+                if(numsx != obj.tasks){
+                    document.getElementById("mainx").innerHTML="";
+                    //window.location.href=window.location.href;
+                }
+                
+                for (let ia = 1; ia < obj.tasks; ia++) {
+                    if(numsx != obj.tasks){
+                        
+                        i=ia;
+                        console.log(i)
+                        document.getElementById("mainx").innerHTML = document.getElementById("mainx").innerHTML + '<div id="t'+i+'"></div><progress id="p'+i+'" value="0" max="100" style="width: 500px; height: 20px;"></progress><br><br>'
+                    }
+                    s(i);
+                }
+                numsx = obj.tasks;
+            }
+        }
+
+    },1000);
+    window.setInterval(function(){
+        var xhr = new XMLHttpRequest();
+        xhr.open('get',"/api/addjson.json");
+        xhr.send();
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState==4 && xhr.status==200){
+                var obj = JSON.parse(xhr.responseText);
+                var a = Number(obj.all)+Number(obj.now);
+                document.getElementById("infox").innerHTML='<div title="'+obj.name+'">正在下载['+obj.now+"/"+a+"(+2)] ("+obj.game+")</div>";
+                    document.getElementById("jp").max = a+2;
+                    document.getElementById("jp").value = obj.now;
+                    window.scrollTo(0, document.body.scrollHeight);
+            }
+        }
+    },1000);
+</script>
+<style>
+    *{
+        color: aliceblue;
+    }
+    progress{
+        background-color: aliceblue;
+        border-radius: 25px;
+    }
+    div{
+        position: fixed;
+    }
+</style>
+<div id="mainx"></div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div>
+    <div id="infox"></div>
+    <progress id="jp" value="0" max="100" style="width: 500px; height: 20px;"></progress>
+</div>
+

@@ -1,0 +1,49 @@
+<div></div>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="icon" href="/random.ico" type="image/x-icon">
+<link rel="shortcut icon" href="/random.ico" type="image/x-icon">
+<title>HoYo3 合一启动器</title>
+<style>
+    img{
+        width: 48px;
+        height: 48px;
+    }
+    .launcher_ic{
+        display:inline-block;
+        margin: 10px;
+        margin-left: 30px;
+    }
+    body{
+        background-color: blanchedalmond;
+    }
+</style>
+<div>
+    <div id="ys" title="原神" class="launcher_ic"><img src="https://ys.mihoyo.com/main/favicon.ico" onclick="init_wid(0)"></div>
+    <div id="hk3" title="崩坏三" class="launcher_ic"><img src="https://www.bh3.com/favicon.ico" onclick="init_wid(1)"></div>
+    <div id="hk4" title="崩坏:星穹铁道" class="launcher_ic"><img src="https://sr.mihoyo.com/favicon.ico" onclick="init_wid(2)"></div>
+    <div id="setting" title="设置"></div>
+</div>
+<iframe src="launcher.html?api=ys" frameborder="0" width="1280px" height="712px" id="if" onload="init_wid()"></iframe>
+<script>
+    function init_wid(o){
+        console.log(o);
+        if(o==0){
+            document.getElementById("if").src = "launcher.html?api=ys";
+        }
+        if(o==1){
+            document.getElementById("if").src = "launcher.html?api=hk3";
+        }
+        if(o==2){
+            document.getElementById("if").src = "launcher.html?api=hk4";
+        }
+    }
+    suun = window.setInterval(function(){
+        ibody = document.getElementById("if").contentWindow.document;
+        if(ibody.getElementById("errs").innerHTML != ""){
+            document.getElementById("if").style.display = "none";
+        }else{
+            document.getElementById("if").style.display = "block";
+        }
+    },100);
+
+</script>
