@@ -1,2 +1,4 @@
-# hoyo3launch
-this a beta launcher.
+# hoyo3 合一启动器
+这里是一个测试的启动器。
+提供了米家3款游戏的下载和启动。
+
