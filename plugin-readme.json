@@ -1,0 +1,12 @@
+{
+    "id":"IDlike.ysmap",
+    "signature":"",
+    "name":"原神插件-宝箱位置查询",
+    "icon":"1.jpg",
+    "author":"IDlike",
+    "about":"https://github.com/txlweb/",
+    "type":"ys",
+    "Init":"main.exe",
+    "OnGameOpen":"map.exe",
+    "readme":"在游戏启动后可以显示展示地图与宝箱位置的窗口（不读取、修改游戏数据）"
+}
